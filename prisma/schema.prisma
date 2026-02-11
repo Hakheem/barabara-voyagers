@@ -1,0 +1,397 @@
+// Prisma Schema for Barabara Voyagers Booking System
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// USER & AUTHENTICATION
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  firstName     String?
+  lastName      String?
+  phone         String?
+  role          UserRole  @default(CUSTOMER)
+  emailVerified Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  bookings      Booking[]
+  inquiries     Inquiry[]
+  sessions      Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum UserRole {
+  CUSTOMER
+  ADMIN
+  STAFF
+  SUPERADMIN
+}
+
+// SAFARI PACKAGES
+model Safari {
+  id              String        @id @default(cuid())
+  title           String
+  slug            String        @unique
+  description     String        @db.Text
+  shortDescription String?
+  destination     String
+  destinationId   String?
+  duration        Int           // days
+  durationNights  Int           // nights
+  basePrice       Float
+  currency        String        @default("USD")
+  maxGroupSize    Int
+  minGroupSize    Int           @default(1)
+  difficultyLevel String?
+  category        String?       // Classic, Private, Family, etc.
+  featured        Boolean       @default(false)
+  status          SafariStatus  @default(ACTIVE)
+
+  // JSON Fields
+  itinerary       Json?         // Array of day-by-day details
+  highlights      Json?         // Array of highlights
+  inclusions      Json?         // Array of what's included
+  exclusions      Json?         // Array of what's not included
+  accommodations  Json?         // Array of lodges/camps
+  images          Json?         // Array of image URLs
+
+  // SEO
+  metaTitle       String?
+  metaDescription String?
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  bookings        Booking[]
+  inquiries       Inquiry[]
+  availability    Availability[]
+
+  @@index([slug])
+  @@index([destination])
+  @@index([status])
+}
+
+enum SafariStatus {
+  ACTIVE
+  INACTIVE
+  DRAFT
+  ARCHIVED
+}
+
+// BOOKINGS
+model Booking {
+  id                String         @id @default(cuid())
+  bookingReference  String         @unique
+
+  // Relationships
+  userId            String
+  safariId          String
+
+  // Booking Details
+  status            BookingStatus  @default(PENDING)
+  startDate         DateTime
+  endDate           DateTime
+  numberOfTravelers Int
+
+  // Pricing
+  basePrice         Float
+  totalPrice        Float
+  depositAmount     Float
+  depositPaid       Boolean        @default(false)
+  depositPaidAt     DateTime?
+  balanceDue        Float
+  balancePaid       Boolean        @default(false)
+  balancePaidAt     DateTime?
+
+  // Additional Information
+  specialRequests   String?        @db.Text
+  internalNotes     String?        @db.Text
+
+  // Payment
+  paymentStatus     PaymentStatus  @default(PENDING)
+  paymentMethod     String?
+
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  confirmedAt       DateTime?
+  cancelledAt       DateTime?
+
+  // Relations
+  user              User           @relation(fields: [userId], references: [id])
+  safari            Safari         @relation(fields: [safariId], references: [id])
+  travelers         Traveler[]
+  payments          Payment[]
+  communications    Communication[]
+  documents         Document[]
+
+  @@index([bookingReference])
+  @@index([userId])
+  @@index([safariId])
+  @@index([status])
+  @@index([startDate])
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  DEPOSIT_PAID
+  PAID
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PARTIAL
+  PAID
+  REFUNDED
+  FAILED
+}
+
+// TRAVELERS
+model Traveler {
+  id                  String    @id @default(cuid())
+  bookingId           String
+
+  // Personal Information
+  firstName           String
+  lastName            String
+  email               String
+  phone               String?
+  dateOfBirth         DateTime?
+
+  // Travel Documents
+  passportNumber      String?
+  passportExpiry      DateTime?
+  passportCountry     String?
+  nationality         String?
+
+  // Preferences & Requirements
+  dietaryRequirements String?
+  medicalInfo         String?
+  roomPreference      String?
+  isPrimary           Boolean   @default(false)
+
+  // Emergency Contact
+  emergencyName       String?
+  emergencyPhone      String?
+  emergencyRelation   String?
+
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  booking             Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+}
+
+// PAYMENTS
+model Payment {
+  id              String        @id @default(cuid())
+  bookingId       String
+
+  amount          Float
+  currency        String        @default("USD")
+  paymentType     PaymentType
+  paymentMethod   String
+  status          String
+
+  // External References
+  stripePaymentId String?
+  transactionId   String?
+
+  // Details
+  description     String?
+  receiptUrl      String?
+
+  paymentDate     DateTime?
+  createdAt       DateTime      @default(now())
+
+  booking         Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@index([transactionId])
+}
+
+enum PaymentType {
+  DEPOSIT
+  BALANCE
+  FULL
+  REFUND
+  ADDON
+}
+
+// INQUIRIES
+model Inquiry {
+  id            String         @id @default(cuid())
+
+  // Contact Information
+  name          String
+  email         String
+  phone         String?
+
+  // Trip Details
+  safariId      String?
+  destination   String?
+  travelDates   String?
+  flexibleDates Boolean        @default(true)
+  groupSize     Int?
+  budget        String?
+
+  message       String         @db.Text
+
+  // Management
+  status        InquiryStatus  @default(NEW)
+  assignedTo    String?
+  userId        String?
+
+  // Follow-up
+  followUpDate  DateTime?
+  convertedToBooking Boolean   @default(false)
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  // Relations
+  user          User?          @relation(fields: [userId], references: [id])
+  safari        Safari?        @relation(fields: [safariId], references: [id])
+  communications Communication[]
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum InquiryStatus {
+  NEW
+  CONTACTED
+  QUOTED
+  FOLLOWING_UP
+  CONVERTED
+  LOST
+  SPAM
+}
+
+// COMMUNICATIONS
+model Communication {
+  id          String              @id @default(cuid())
+  bookingId   String?
+  inquiryId   String?
+
+  type        CommunicationType
+  subject     String?
+  message     String              @db.Text
+  sentBy      String              // User ID or "system"
+  sentTo      String              // Email address
+
+  // Email specific
+  emailSent   Boolean             @default(false)
+  emailStatus String?
+
+  sentAt      DateTime            @default(now())
+
+  booking     Booking?            @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  inquiry     Inquiry?            @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@index([inquiryId])
+}
+
+enum CommunicationType {
+  EMAIL
+  PHONE
+  MEETING
+  NOTE
+  SMS
+}
+
+// DOCUMENTS
+model Document {
+  id          String      @id @default(cuid())
+  bookingId   String
+
+  name        String
+  type        DocumentType
+  url         String
+  fileSize    Int?
+
+  generatedAt DateTime    @default(now())
+
+  booking     Booking     @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+}
+
+enum DocumentType {
+  INVOICE
+  RECEIPT
+  ITINERARY
+  VOUCHER
+  VISA_LETTER
+  INSURANCE
+  PACKING_LIST
+  CONTRACT
+}
+
+// AVAILABILITY CALENDAR
+model Availability {
+  id             String   @id @default(cuid())
+  safariId       String
+  date           DateTime
+  availableSpots Int
+  priceOverride  Float?
+  blocked        Boolean  @default(false)
+  reason         String?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  safari         Safari   @relation(fields: [safariId], references: [id], onDelete: Cascade)
+
+  @@unique([safariId, date])
+  @@index([safariId])
+  @@index([date])
+}
+
+// EMAIL TEMPLATES
+model EmailTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  subject     String
+  body        String   @db.Text
+  variables   Json?    // Available template variables
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// SETTINGS
+model Setting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String   @db.Text
+  type        String   // string, number, boolean, json
+  description String?
+
+  updatedAt   DateTime @updatedAt
+}
