@@ -11,7 +11,7 @@ import Button from '@/components/ui/Button';
 import { BlogPost } from '@/types';
 
 // Swiper styles
-import 'swiper/css';
+import 'swiper/css'; 
 
 interface BlogSnippetProps {
   posts: BlogPost[];
