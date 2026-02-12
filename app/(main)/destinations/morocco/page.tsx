@@ -13,13 +13,14 @@ import DestinationSwitcher from '@/components/general/DestinationSwitcher';
 import WhyChooseSection from '@/components/sections/WhyChooseComponent';
 import SafariPackagesSection from '@/components/sections/SafariPackages';
 import PremiumCTASection from '@/components/sections/DestinationsCTA';
-
+import { getSafarisByDestination } from '@/lib/sanity-queries';
+ 
 export const metadata = {
   title: 'Morocco Safaris & Tours - Sahara Desert Adventures | Barabara Voyagers',
   description: 'Explore Morocco\'s Sahara Desert, ancient cities, and Atlas Mountains. Luxury riads, camel treks, and cultural experiences.',
 };
 
-export default function MoroccoPage() {
+export default async function MoroccoPage() {
   const whyMoroccoData = [
     { 
       title: 'Luxury Riads', 
@@ -59,7 +60,18 @@ export default function MoroccoPage() {
     },
   ];
 
-  const safariPackagesData = [
+  // Fetch safaris from Sanity or fallback to hardcoded data
+  const sanityData = await getSafarisByDestination('Morocco');
+  const safariPackagesData = sanityData.length > 0 ? sanityData.map(safari => ({
+    id: safari.id,
+    title: safari.title,
+    slug: safari.slug,
+    duration: `${safari.duration} Days / ${safari.durationNights} Nights`,
+    basePrice: safari.basePrice,
+    description: safari.description,
+    image: (safari.images && safari.images[0]) || 'https://images.unsplash.com/photo-1539020290231-9584e27c28b2?w=1200',
+    highlights: safari.highlights || [] ,
+  })) : [
     {
       id: '1',
       title: 'Imperial Cities & Sahara Adventure',

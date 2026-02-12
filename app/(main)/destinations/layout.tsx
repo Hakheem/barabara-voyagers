@@ -11,7 +11,7 @@ const destinationHeroData: Record<string, any> = {
     title: "Kenya",
     description: "The original safari destination. Experience the legendary Masai Mara, dramatic landscapes of Amboseli, and the rich cultural heritage of the Maasai people.",
     image: "/kenya_head_r.jpg"
-  }, 
+  },  
   tanzania: {
     title: "Tanzania",
     description: "Home to the Ngorongoro Crater and the endless Serengeti, Tanzania offers a scale of wildlife viewing that is unmatched.",

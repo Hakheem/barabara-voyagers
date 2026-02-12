@@ -13,13 +13,14 @@ import DestinationSwitcher from '@/components/general/DestinationSwitcher';
 import WhyChooseSection from '@/components/sections/WhyChooseComponent';
 import SafariPackagesSection from '@/components/sections/SafariPackages';
 import PremiumCTASection from '@/components/sections/DestinationsCTA';
+import { getSafarisByDestination } from '@/lib/sanity-queries';
 
 export const metadata = {
   title: 'Zambia Safaris - Walking Safaris & South Luangwa | Barabara Voyagers',
   description: 'Experience Zambia\'s authentic wilderness. South Luangwa walking safaris, Lower Zambezi canoeing, and Victoria Falls from the Zambian side.',
 };
 
-export default function ZambiaPage() {
+export default async function ZambiaPage() {
   const whyZambiaData = [
     { 
       title: 'Walking Safari Pioneer', 
@@ -59,7 +60,18 @@ export default function ZambiaPage() {
     },
   ];
 
-  const safariPackagesData = [
+  // Fetch safaris from Sanity or fallback to hardcoded data
+  const sanityData = await getSafarisByDestination('Zambia');
+  const safariPackagesData = sanityData.length > 0 ? sanityData.map(safari => ({
+    id: safari.id,
+    title: safari.title,
+    slug: safari.slug,
+    duration: `${safari.duration} Days / ${safari.durationNights} Nights`,
+    basePrice: safari.basePrice,
+    description: safari.description,
+    image: safari.images[0] || 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1200',
+    highlights: safari.highlights,
+  })) : [
     {
       id: '1',
       title: 'South Luangwa Walking Safari',

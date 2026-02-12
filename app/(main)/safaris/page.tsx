@@ -13,7 +13,7 @@ export const metadata = {
  
 export default function SafarisOverviewPage() {
   const safariTypes = [
-    {
+    { 
       title: 'Classic Safari', 
       slug: 'classic',
       color: 'amber',

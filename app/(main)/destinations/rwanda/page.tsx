@@ -14,13 +14,14 @@ import DestinationSwitcher from '@/components/general/DestinationSwitcher';
 import WhyChooseSection from '@/components/sections/WhyChooseComponent';
 import SafariPackagesSection from '@/components/sections/SafariPackages';
 import PremiumCTASection from '@/components/sections/DestinationsCTA';
+import { getSafarisByDestination } from '@/lib/sanity-queries';
 
 export const metadata = {
   title: 'Rwanda Safaris - Gorilla Trekking & Wildlife | Barabara Voyagers',
   description: 'Discover Rwanda, the Land of a Thousand Hills. Experience gorilla trekking in Volcanoes National Park and explore vibrant Kigali.',
 };
 
-export default function RwandaPage() {
+export default async function RwandaPage() {
   const whyRwandaData = [
     { 
       title: 'Premier Trekking', 
@@ -60,7 +61,18 @@ export default function RwandaPage() {
     },
   ];
 
-  const safariPackagesData = [
+  // Fetch safaris from Sanity or fallback to hardcoded data
+  const sanityData = await getSafarisByDestination('Rwanda');
+  const safariPackagesData = sanityData.length > 0 ? sanityData.map(safari => ({
+    id: safari.id,
+    title: safari.title,
+    slug: safari.slug,
+    duration: `${safari.duration} Days / ${safari.durationNights} Nights`,
+    basePrice: safari.basePrice,
+    description: safari.description,
+    image: safari.images[0] || 'https://images.unsplash.com/photo-1551522435-a13afa10f103?w=1200',
+    highlights: safari.highlights,
+  })) : [
     {
       id: '1',
       title: 'Signature Rwanda Gorilla Safari',
@@ -70,9 +82,7 @@ export default function RwandaPage() {
       description: 'An intimate journey into the heart of the Virunga Mountains. Witness the majestic mountain gorillas and explore the clean, vibrant streets of Kigali.',
       image: 'https://images.unsplash.com/photo-1551522435-a13afa10f103?w=1200&auto=format&fit=crop&q=80',
       highlights: ['Mountain Gorilla Trekking', 'Volcanoes National Park', 'Kigali City Tour', 'Genocide Memorial Visit'],
-      // category: 'Signature',
       exclusivity: 'Gorilla Permits Included',
-      // groupSize: 'Max 8 Guests'
     },
     {
       id: '2',
@@ -83,9 +93,7 @@ export default function RwandaPage() {
       description: 'The ultimate Rwandan circuit. From the lush primate forests of Volcanoes to the classic savannah Big Five experience in Akagera.',
       image: 'https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=1200&auto=format&fit=crop&q=80',
       highlights: ['Gorilla & Golden Monkeys', 'Akagera National Park', 'Big Five Game Drives', 'Boat Safari'],
-      // category: 'Ultimate',
       exclusivity: 'Private Guide & Vehicle',
-      // groupSize: 'Max 6 Guests'
     },
     {
       id: '3',

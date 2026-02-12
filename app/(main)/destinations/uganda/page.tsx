@@ -15,13 +15,14 @@ import DestinationSwitcher from '@/components/general/DestinationSwitcher';
 import WhyChooseSection from '@/components/sections/WhyChooseComponent';
 import SafariPackagesSection from '@/components/sections/SafariPackages';
 import PremiumCTASection from '@/components/sections/DestinationsCTA';
+import { getSafarisByDestination } from '@/lib/sanity-queries';
 
 export const metadata = {
   title: 'Uganda Safaris - Gorilla Trekking & Wildlife Adventures | Barabara Voyagers',
   description: 'Experience the magic of Uganda with gorilla trekking in Bwindi, chimpanzee tracking in Kibale, and wildlife safaris in Queen Elizabeth National Park.',
 };
 
-export default function UgandaPage() {
+export default async function UgandaPage() {
   const whyUgandaData = [
     {
       title: 'Mountain Gorillas',
@@ -67,7 +68,18 @@ export default function UgandaPage() {
     },
   ];
 
-  const safariPackagesData = [
+  // Fetch safaris from Sanity or fallback to hardcoded data
+  const sanityData = await getSafarisByDestination('Uganda');
+  const safariPackagesData = sanityData.length > 0 ? sanityData.map(safari => ({
+    id: safari.id,
+    title: safari.title,
+    slug: safari.slug,
+    duration: `${safari.duration} Days / ${safari.durationNights} Nights`,
+    basePrice: safari.basePrice,
+    description: safari.description,
+    image: safari.images[0] || 'https://images.unsplash.com/photo-1551522435-a13afa10f103?w=1200',
+    highlights: safari.highlights,
+  })) : [
     {
       id: '1',
       title: 'Signature Gorilla & Wildlife Safari',

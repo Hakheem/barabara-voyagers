@@ -13,13 +13,14 @@ import DestinationSwitcher from '@/components/general/DestinationSwitcher';
 import WhyChooseSection from '@/components/sections/WhyChooseComponent';
 import SafariPackagesSection from '@/components/sections/SafariPackages';
 import PremiumCTASection from '@/components/sections/DestinationsCTA';
+import { getSafarisByDestination } from '@/lib/sanity-queries';
 
 export const metadata = {
   title: 'South Africa Safaris - Big Five & Garden Route | Barabara Voyagers',
   description: 'Discover South Africa\'s incredible diversity. Big Five safaris in malaria-free reserves, Cape Town\'s stunning beauty, wine country, Garden Route, and world-class infrastructure.',
 };
 
-export default function SouthAfricaPage() {
+export default async function SouthAfricaPage() {
   const whySouthAfricaData = [
     { 
       title: 'Malaria-Free Safaris', 
@@ -59,7 +60,18 @@ export default function SouthAfricaPage() {
     },
   ];
 
-  const safariPackagesData = [
+  // Fetch safaris from Sanity or fallback to hardcoded data
+  const sanityData = await getSafarisByDestination('South Africa');
+  const safariPackagesData = sanityData.length > 0 ? sanityData.map(safari => ({
+    id: safari.id,
+    title: safari.title,
+    slug: safari.slug,
+    duration: `${safari.duration} Days / ${safari.durationNights} Nights`,
+    basePrice: safari.basePrice,
+    description: safari.description,
+    image: safari.images[0] || 'https://images.unsplash.com/photo-1484318571209-661cf29a69c3?w=1200',
+    highlights: safari.highlights,
+  })) : [
     {
       id: '1',
       title: 'Classic South Africa Safari & Cape Town',

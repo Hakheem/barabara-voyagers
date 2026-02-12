@@ -83,90 +83,89 @@
 //   height: number;
 // }
 
-
-export * from './wordpress';
+export * from "./wordpress";
 
 // ============================================================================
 // ENUMS (matching Prisma schema exactly)
 // ============================================================================
 
 export enum UserRole {
-  CUSTOMER = 'CUSTOMER',
-  ADMIN = 'ADMIN',
-  STAFF = 'STAFF',
-  SUPERADMIN = 'SUPERADMIN',
+  CUSTOMER = "CUSTOMER",
+  ADMIN = "ADMIN",
+  STAFF = "STAFF",
+  SUPERADMIN = "SUPERADMIN",
 }
 
 export enum SafariStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  DRAFT = 'DRAFT',
-  ARCHIVED = 'ARCHIVED',
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  DRAFT = "DRAFT",
+  ARCHIVED = "ARCHIVED",
 }
 
 export enum BookingStatus {
-  PENDING = 'PENDING',
-  CONFIRMED = 'CONFIRMED',
-  DEPOSIT_PAID = 'DEPOSIT_PAID',
-  PAID = 'PAID',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED',
-  REFUNDED = 'REFUNDED',
+  PENDING = "PENDING",
+  CONFIRMED = "CONFIRMED",
+  DEPOSIT_PAID = "DEPOSIT_PAID",
+  PAID = "PAID",
+  IN_PROGRESS = "IN_PROGRESS",
+  COMPLETED = "COMPLETED",
+  CANCELLED = "CANCELLED",
+  REFUNDED = "REFUNDED",
 }
 
 export enum PaymentStatus {
-  PENDING = 'PENDING',
-  PARTIAL = 'PARTIAL',
-  PAID = 'PAID',
-  REFUNDED = 'REFUNDED',
-  FAILED = 'FAILED',
+  PENDING = "PENDING",
+  PARTIAL = "PARTIAL",
+  PAID = "PAID",
+  REFUNDED = "REFUNDED",
+  FAILED = "FAILED",
 }
 
 export enum PaymentType {
-  DEPOSIT = 'DEPOSIT',
-  BALANCE = 'BALANCE',
-  FULL = 'FULL',
-  REFUND = 'REFUND',
-  ADDON = 'ADDON',
+  DEPOSIT = "DEPOSIT",
+  BALANCE = "BALANCE",
+  FULL = "FULL",
+  REFUND = "REFUND",
+  ADDON = "ADDON",
 }
 
 export enum InquiryStatus {
-  NEW = 'NEW',
-  CONTACTED = 'CONTACTED',
-  QUOTED = 'QUOTED',
-  FOLLOWING_UP = 'FOLLOWING_UP',
-  CONVERTED = 'CONVERTED',
-  LOST = 'LOST',
-  SPAM = 'SPAM',
+  NEW = "NEW",
+  CONTACTED = "CONTACTED",
+  QUOTED = "QUOTED",
+  FOLLOWING_UP = "FOLLOWING_UP",
+  CONVERTED = "CONVERTED",
+  LOST = "LOST",
+  SPAM = "SPAM",
 }
 
 export enum CommunicationType {
-  EMAIL = 'EMAIL',
-  PHONE = 'PHONE',
-  MEETING = 'MEETING',
-  NOTE = 'NOTE',
-  SMS = 'SMS',
+  EMAIL = "EMAIL",
+  PHONE = "PHONE",
+  MEETING = "MEETING",
+  NOTE = "NOTE",
+  SMS = "SMS",
 }
 
 export enum DocumentType {
-  INVOICE = 'INVOICE',
-  RECEIPT = 'RECEIPT',
-  ITINERARY = 'ITINERARY',
-  VOUCHER = 'VOUCHER',
-  VISA_LETTER = 'VISA_LETTER',
-  INSURANCE = 'INSURANCE',
-  PACKING_LIST = 'PACKING_LIST',
-  CONTRACT = 'CONTRACT',
+  INVOICE = "INVOICE",
+  RECEIPT = "RECEIPT",
+  ITINERARY = "ITINERARY",
+  VOUCHER = "VOUCHER",
+  VISA_LETTER = "VISA_LETTER",
+  INSURANCE = "INSURANCE",
+  PACKING_LIST = "PACKING_LIST",
+  CONTRACT = "CONTRACT",
 }
 
 export enum NotificationType {
-  BOOKING_CONFIRMED = 'BOOKING_CONFIRMED',
-  PAYMENT_RECEIVED = 'PAYMENT_RECEIVED',
-  PAYMENT_REMINDER = 'PAYMENT_REMINDER',
-  TRIP_REMINDER = 'TRIP_REMINDER',
-  INQUIRY_RESPONSE = 'INQUIRY_RESPONSE',
-  SYSTEM = 'SYSTEM',
+  BOOKING_CONFIRMED = "BOOKING_CONFIRMED",
+  PAYMENT_RECEIVED = "PAYMENT_RECEIVED",
+  PAYMENT_REMINDER = "PAYMENT_REMINDER",
+  TRIP_REMINDER = "TRIP_REMINDER",
+  INQUIRY_RESPONSE = "INQUIRY_RESPONSE",
+  SYSTEM = "SYSTEM",
 }
 
 // ============================================================================
@@ -220,7 +219,7 @@ export interface Safari {
   category?: string;
   featured: boolean;
   status: SafariStatus;
-  
+
   // JSON Fields (arrays stored as JSON in Prisma)
   itinerary?: ItineraryDay[];
   highlights?: string[];
@@ -228,14 +227,14 @@ export interface Safari {
   exclusions?: string[];
   accommodations?: Accommodation[];
   images?: string[];
-  
+
   // SEO
   metaTitle?: string;
   metaDescription?: string;
-  
+
   createdAt: Date | string;
   updatedAt: Date | string;
-  
+
   // Relations
   bookings?: Booking[];
   inquiries?: Inquiry[];
@@ -302,6 +301,7 @@ export interface Destination {
   country: string;
   region: string;
   featured: boolean;
+  tagline?: string;
 }
 
 // ============================================================================
@@ -311,17 +311,17 @@ export interface Destination {
 export interface Booking {
   id: string;
   bookingReference: string;
-  
+
   // Relationships
   userId: string;
   safariId: string;
-  
+
   // Booking Details
   status: BookingStatus;
   startDate: Date | string;
   endDate: Date | string;
   numberOfTravelers: number;
-  
+
   // Pricing
   basePrice: number;
   totalPrice: number;
@@ -331,20 +331,20 @@ export interface Booking {
   balanceDue: number;
   balancePaid: boolean;
   balancePaidAt?: Date | string;
-  
+
   // Additional Information
   specialRequests?: string;
   internalNotes?: string;
-  
+
   // Payment
   paymentStatus: PaymentStatus;
   paymentMethod?: string;
-  
+
   createdAt: Date | string;
   updatedAt: Date | string;
   confirmedAt?: Date | string;
   cancelledAt?: Date | string;
-  
+
   // Relations
   user?: User;
   safari?: Safari;
@@ -369,34 +369,34 @@ export interface CreateBookingInput {
 export interface Traveler {
   id: string;
   bookingId: string;
-  
+
   // Personal Information
   firstName: string;
   lastName: string;
   email: string;
   phone?: string;
   dateOfBirth?: Date | string;
-  
+
   // Travel Documents
   passportNumber?: string;
   passportExpiry?: Date | string;
   passportCountry?: string;
   nationality?: string;
-  
+
   // Preferences & Requirements
   dietaryRequirements?: string;
   medicalInfo?: string;
   roomPreference?: string;
   isPrimary: boolean;
-  
+
   // Emergency Contact
   emergencyName?: string;
   emergencyPhone?: string;
   emergencyRelation?: string;
-  
+
   createdAt: Date | string;
   updatedAt: Date | string;
-  
+
   booking?: Booking;
 }
 
@@ -426,24 +426,24 @@ export interface CreateTravelerInput {
 export interface Payment {
   id: string;
   bookingId: string;
-  
+
   amount: number;
   currency: string;
   paymentType: PaymentType;
   paymentMethod: string;
   status: string;
-  
+
   // External References
   stripePaymentId?: string;
   transactionId?: string;
-  
+
   // Details
   description?: string;
   receiptUrl?: string;
-  
+
   paymentDate?: Date | string;
   createdAt: Date | string;
-  
+
   booking?: Booking;
 }
 
@@ -460,12 +460,12 @@ export interface CreatePaymentInput {
 
 export interface Inquiry {
   id: string;
-  
+
   // Contact Information
   name: string;
   email: string;
   phone?: string;
-  
+
   // Trip Details
   safariId?: string;
   destination?: string;
@@ -473,21 +473,21 @@ export interface Inquiry {
   flexibleDates: boolean;
   groupSize?: number;
   budget?: string;
-  
+
   message: string;
-  
+
   // Management
   status: InquiryStatus;
   assignedTo?: string;
   userId?: string;
-  
+
   // Follow-up
   followUpDate?: Date | string;
   convertedToBooking: boolean;
-  
+
   createdAt: Date | string;
   updatedAt: Date | string;
-  
+
   // Relations
   user?: User;
   safari?: Safari;
@@ -515,19 +515,19 @@ export interface Communication {
   id: string;
   bookingId?: string;
   inquiryId?: string;
-  
+
   type: CommunicationType;
   subject?: string;
   message: string;
   sentBy: string; // User ID or "system"
   sentTo: string; // Email address
-  
+
   // Email specific
   emailSent: boolean;
   emailStatus?: string;
-  
+
   sentAt: Date | string;
-  
+
   booking?: Booking;
   inquiry?: Inquiry;
 }
@@ -539,14 +539,14 @@ export interface Communication {
 export interface Document {
   id: string;
   bookingId: string;
-  
+
   name: string;
   type: DocumentType;
   url: string;
   fileSize?: number;
-  
+
   generatedAt: Date | string;
-  
+
   booking?: Booking;
 }
 
@@ -562,10 +562,10 @@ export interface Availability {
   priceOverride?: number;
   blocked: boolean;
   reason?: string;
-  
+
   createdAt: Date | string;
   updatedAt: Date | string;
-  
+
   safari?: Safari;
 }
 
@@ -580,7 +580,7 @@ export interface EmailTemplate {
   subject: string;
   body: string;
   variables?: Record<string, string>;
-  
+
   createdAt: Date | string;
   updatedAt: Date | string;
 }
@@ -593,9 +593,9 @@ export interface Setting {
   id: string;
   key: string;
   value: string;
-  type: 'string' | 'number' | 'boolean' | 'json';
+  type: "string" | "number" | "boolean" | "json";
   description?: string;
-  
+
   updatedAt: Date | string;
 }
 
@@ -698,7 +698,7 @@ export interface PaginationParams {
   page: number;
   limit: number;
   sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+  sortOrder?: "asc" | "desc";
 }
 
 export interface PaginatedResponse<T> {

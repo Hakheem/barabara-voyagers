@@ -6,20 +6,21 @@ import {
   Clock, DollarSign, ChevronRight, Mountain, Waves,
   FileText, Shield, CreditCard, Download, ExternalLink,
   Crown, Sparkles, Compass, Camera
-} from 'lucide-react';
+} from 'lucide-react'; 
 import Container from '@/components/ui/Container';
 import Button from '@/components/ui/Button';
 import DestinationSwitcher from '@/components/general/DestinationSwitcher';
 import WhyChooseSection from '@/components/sections/WhyChooseComponent';
 import SafariPackagesSection from '@/components/sections/SafariPackages';
-import PremiumCTASection from '@/components/sections/DestinationsCTA';
+import PremiumCTASection from '@/components/sections/DestinationsCTA'; 
+import { getSafarisByDestination } from '@/lib/sanity-queries';
 
 export const metadata = {
   title: 'Tanzania Safaris - Serengeti, Ngorongoro & Zanzibar | Barabara Voyagers',
   description: 'Experience the wonders of Tanzania with our luxury safari packages.',
 };
 
-export default function TanzaniaPage() {
+export default async function TanzaniaPage() {
   const whyTanzaniaData = [
     {
       title: 'The Great Migration',
@@ -42,7 +43,6 @@ export default function TanzaniaPage() {
     {
       title: 'Maasai Heritage',
       desc: 'Authentic cultural immersion experiences.',
-      // extendedDesc: 'Engage with Maasai communities through curated cultural exchanges and village visits.',
       icon: Users,
       img: 'https://images.unsplash.com/photo-1519659528534-7fd733a82ad1?w=800&auto=format&fit=crop&q=80'
     },
@@ -60,10 +60,21 @@ export default function TanzaniaPage() {
     },
   ];
 
-  const safariPackagesData = [
+  // Fetch safaris from Sanity or fallback to hardcoded data
+  const sanityData = await getSafarisByDestination('Tanzania');
+  const safariPackagesData = sanityData.length > 0 ? sanityData.map(safari => ({
+    id: safari.id,
+    title: safari.title,
+    slug: safari.slug,
+    duration: `${safari.duration} Days / ${safari.durationNights} Nights`,
+    basePrice: safari.basePrice,
+    description: safari.description,
+    image: (safari.images && safari.images[0]) || 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1200',
+    highlights: safari.highlights || [],
+  })) : [
     {
       id: '1',
-      title: 'Signature Tanzania Safari',
+      title: 'Signature Tanzania Safari - direct in page',
       slug: 'signature-tanzania-safari',
       duration: '10 Days / 9 Nights',
       basePrice: 5800,
@@ -76,7 +87,7 @@ export default function TanzaniaPage() {
     },
     {
       id: '2',
-      title: 'Tanzania & Zanzibar Elegance',
+      title: 'Tanzania & Zanzibar Elegance - also direct in page',
       slug: 'tanzania-zanzibar-elegance',
       duration: '14 Days / 13 Nights',
       basePrice: 7800,
@@ -108,7 +119,6 @@ export default function TanzaniaPage() {
       <WhyChooseSection
         title="Why Tanzania"
         subtitle="Africa's Wildlife Crown"
-        // tagline="Where the wild still rules"
         items={whyTanzaniaData}
       />
 

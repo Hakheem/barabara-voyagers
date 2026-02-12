@@ -17,6 +17,12 @@ export default defineType({
       type: "slug",
       options: { source: "name", maxLength: 96 },
     }),
+    defineField({
+      name: "tagline",
+      title: "Tagline",
+      type: "string",
+      description: "A catchy phrase (e.g., 'The Cradle of Humanity' or 'The Last Eden')",
+    }),
     defineField({ name: "country", title: "Country", type: "string" }),
     defineField({ name: "region", title: "Region", type: "string" }),
     defineField({
@@ -44,5 +50,11 @@ export default defineType({
       initialValue: false,
     }),
   ],
-  preview: { select: { title: "name", media: "mainImage" } },
+  preview: { 
+    select: { 
+      title: "name", 
+      subtitle: "tagline",
+      media: "mainImage" 
+    } 
+  },
 });

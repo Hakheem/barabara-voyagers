@@ -6,7 +6,7 @@ import Button from '@/components/ui/Button';
 
 interface SafariPackage {
   id: string;
-  title: string;
+  title: string; 
   slug: string;
   duration: string;
   basePrice: number;
@@ -81,7 +81,7 @@ export default function SafariPackagesSection({
                 {/* Image container with overlay */}
                 <div className="relative lg:w-2/5 h-[380px] lg:h-auto overflow-hidden">
                   <Image
-                    src={safari.image}
+                    src={safari.image} 
                     alt={safari.title}
                     fill
                     className="object-cover transition-transform duration-1000 group-hover:scale-105"

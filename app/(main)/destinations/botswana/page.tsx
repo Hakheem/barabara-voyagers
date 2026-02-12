@@ -14,13 +14,14 @@ import DestinationSwitcher from '@/components/general/DestinationSwitcher';
 import WhyChooseSection from '@/components/sections/WhyChooseComponent';
 import SafariPackagesSection from '@/components/sections/SafariPackages';
 import PremiumCTASection from '@/components/sections/DestinationsCTA';
+import { getSafarisByDestination } from '@/lib/sanity-queries';
 
 export const metadata = {
   title: 'Botswana Safaris - Okavango Delta & Luxury Wildlife | Barabara Voyagers',
   description: 'Experience the pristine wilderness of Botswana. Explore the Okavango Delta and encounter massive elephant herds in Chobe.',
 };
 
-export default function BotswanaPage() {
+export default async function BotswanaPage() {
   const whyBotswanaData = [
     { 
       title: 'Okavango Delta', 
@@ -60,7 +61,18 @@ export default function BotswanaPage() {
     },
   ];
 
-  const safariPackagesData = [
+  // Fetch safaris from Sanity or fallback to hardcoded data
+  const sanityData = await getSafarisByDestination('Botswana');
+  const safariPackagesData = sanityData.length > 0 ? sanityData.map(safari => ({
+    id: safari.id,
+    title: safari.title,
+    slug: safari.slug,
+    duration: `${safari.duration} Days / ${safari.durationNights} Nights`,
+    basePrice: safari.basePrice,
+    description: safari.description,
+    image: safari.images[0] || 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1200',
+    highlights: safari.highlights,
+  })) : [
     {
       id: '1',
       title: 'Classic Okavango Delta Safari',

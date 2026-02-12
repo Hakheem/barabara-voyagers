@@ -4,10 +4,10 @@ import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from 'lucide-react'
 
 const navigation = {
   destinations: [
-    { name: 'Tanzania', href: '/destinations?country=tanzania' },
-    { name: 'Kenya', href: '/destinations?country=kenya' },
-    { name: 'Uganda', href: '/destinations?country=uganda' },
-    { name: 'Rwanda', href: '/destinations?country=rwanda' },
+    { name: 'Kenya', href: '/destinations/kenya' },
+    { name: 'Tanzania', href: '/destinations/tanzania' },
+    { name: 'Uganda', href: '/destinations/uganda' },
+    { name: 'Rwanda', href: '/destinations/rwanda' },
   ],
   company: [
     { name: 'About Us', href: '/about' },

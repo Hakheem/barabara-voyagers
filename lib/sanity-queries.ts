@@ -1,240 +1,83 @@
-// import { client } from "@/sanity/lib/client";
-import type { Package } from "@/types";
+import { client } from "@/sanity/lib/client";
+import type {
+  Package,
+  BlogPost,
+  Destination,
+  Testimonial,
+  Safari,
+} from "@/types";
 
 /**
- * MOCK DATA FOR DEVELOPMENT
- * Remove this section and uncomment Sanity code when ready to connect to CMS
+ * MOCK DATA FOR DEVELOPMENT (used when Sanity fetch fails)
  */
 const MOCK_PACKAGES: Package[] = [
   {
-    id: '1',
-    title: 'Classic Kenya Safari - Masai Mara & Amboseli',
-    slug: 'classic-kenya-safari',
-    description: '<p>Journey through the heart of the Great Rift Valley. This expedition combines the elephant-rich plains of Amboseli with the predator-dense savannahs of the Masai Mara for the ultimate introduction to East African wildlife.</p><p>Experience breathtaking landscapes, encounter the Big Five, and immerse yourself in authentic Maasai culture. Our expert guides will ensure you witness the very best of Kenya\'s incredible biodiversity.</p>',
-    excerpt: 'Experience the magic of Kenya with visits to Masai Mara and Amboseli National Parks. Witness the Big Five and stunning landscapes.',
-    destination: 'Kenya',
-    duration: '8 Days / 7 Nights',
-    price: '4800',
-    currency: 'USD',
-    image: 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=1200',
-    gallery: [ 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=1200' ,
-       'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1200',
-    ],
-    highlights: [
-      'Masai Mara National Reserve game drives',
-      'Amboseli National Park elephant viewing',
-      'Lake Nakuru flamingo sightings',
-      'Big Five wildlife encounters',
-      'Cultural visit to Maasai village',
-      'Professional safari guide throughout'
-    ],
+    id: "1",
+    title: "Classic Kenya Safari - Masai Mara & Amboseli",
+    slug: "classic-kenya-safari",
+    description: "<p>Journey through the heart of the Great Rift Valley...</p>",
+    excerpt: "Experience the magic of Kenya with visits to Masai Mara and Amboseli.",
+    destination: "Kenya",
+    duration: "8 Days / 7 Nights",
+    price: "4800",
+    currency: "USD",
+    image: "https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=1200",
+    gallery: ["https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=1200"],
+    highlights: ["Masai Mara National Reserve", "Big Five wildlife encounters"],
     itinerary: [
       {
         day: 1,
-        title: 'Arrival in Nairobi',
-        description: 'Arrive at Jomo Kenyatta International Airport where you\'ll be met by our representative. Transfer to your hotel for an overnight stay and safari briefing.',
-        accommodation: 'Nairobi Serena Hotel',
-        meals: 'Dinner'
+        title: "Arrival in Nairobi",
+        description: "Arrive at Jomo Kenyatta International Airport.",
+        accommodation: "Nairobi Serena Hotel",
+        meals: "Dinner",
       },
-      {
-        day: 2,
-        title: 'Nairobi to Amboseli National Park',
-        description: 'After breakfast, depart for Amboseli National Park. Arrive in time for lunch and an afternoon game drive with views of Mount Kilimanjaro.',
-        accommodation: 'Amboseli Serena Safari Lodge',
-        meals: 'Breakfast, Lunch, Dinner'
-      },
-      {
-        day: 3,
-        title: 'Full Day in Amboseli',
-        description: 'Enjoy morning and afternoon game drives in Amboseli, famous for its large elephant herds and stunning views of Kilimanjaro.',
-        accommodation: 'Amboseli Serena Safari Lodge',
-        meals: 'Breakfast, Lunch, Dinner'
-      },
-      {
-        day: 4,
-        title: 'Amboseli to Lake Nakuru',
-        description: 'Travel to Lake Nakuru National Park, home to millions of flamingos and endangered rhinos. Afternoon game drive.',
-        accommodation: 'Lake Nakuru Sopa Lodge',
-        meals: 'Breakfast, Lunch, Dinner'
-      },
-      {
-        day: 5,
-        title: 'Lake Nakuru to Masai Mara',
-        description: 'Drive to the legendary Masai Mara National Reserve. Evening game drive in search of the Big Five.',
-        accommodation: 'Mara Serena Safari Lodge',
-        meals: 'Breakfast, Lunch, Dinner'
-      },
-      {
-        day: 6,
-        title: 'Full Day Masai Mara',
-        description: 'Full day of game drives in the Mara. Optional hot air balloon safari available (additional cost).',
-        accommodation: 'Mara Serena Safari Lodge',
-        meals: 'Breakfast, Lunch, Dinner'
-      },
-      {
-        day: 7,
-        title: 'Masai Mara Exploration',
-        description: 'Another full day exploring the Mara ecosystem. Visit a traditional Maasai village in the afternoon.',
-        accommodation: 'Mara Serena Safari Lodge',
-        meals: 'Breakfast, Lunch, Dinner'
-      },
-      {
-        day: 8,
-        title: 'Return to Nairobi',
-        description: 'Morning game drive, then drive back to Nairobi. Day room at hotel before evening departure.',
-        accommodation: 'Day room at Nairobi Serena Hotel',
-        meals: 'Breakfast, Lunch'
-      }
     ],
-    includes: [
-      'Airport transfers',
-      'All accommodation as specified',
-      'All meals as indicated',
-      'All park entrance fees',
-      'Professional English-speaking driver-guide',
-      '4x4 safari vehicle with pop-up roof',
-      'Game drives as per itinerary',
-      'Bottled water during game drives',
-      'Emergency evacuation insurance'
-    ],
-    excludes: [
-      'International flights',
-      'Visa fees',
-      'Travel insurance',
-      'Personal expenses',
-      'Tips and gratuities',
-      'Optional activities (hot air balloon safari)',
-      'Drinks at lodges',
-      'Items not mentioned in inclusions'
-    ],
-    bestTimeToVisit: 'July to October (Great Migration), January to March (Green season)',
-    difficultyLevel: 'Easy - suitable for all fitness levels',
-    groupSize: 'Small groups (Max 6 people per vehicle)'
+    includes: ["Airport transfers", "All park entrance fees"],
+    excludes: ["International flights", "Visa fees"],
+    bestTimeToVisit: "July to October",
+    difficultyLevel: "Easy",
+    groupSize: "Small groups", 
   },
-  {
-    id: '2',
-    title: 'Kenya & Zanzibar Beach Escape',
-    slug: 'kenya-zanzibar-beach',
-    description: '<p>The perfect blend of adventure and relaxation. Start with heart-pounding game drives in Kenya\'s premier reserves before flying to the spice island of Zanzibar for white sands and turquoise waters.</p><p>This carefully curated journey offers the best of both worlds - thrilling wildlife encounters followed by tropical beach relaxation and cultural exploration in historic Stone Town.</p>',
-    excerpt: 'Combine Kenya safari adventure with the pristine beaches of Zanzibar for the ultimate African experience.',
-    destination: 'Kenya & Tanzania',
-    duration: '12 Days / 11 Nights',
-    price: '6500',
-    currency: 'USD',
-    image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1200',
-    gallery: [],
-    highlights: [
-      'Masai Mara wildlife safaris',
-      'Great Migration viewing (seasonal)',
-      'Zanzibar beach resort relaxation',
-      'Stone Town cultural tour',
-      'Spice plantation visit',
-      'Snorkeling in crystal-clear waters'
-    ],
-    itinerary: [
-      {
-        day: 1,
-        title: 'Arrival in Nairobi',
-        description: 'Meet and greet at airport, transfer to hotel.',
-        accommodation: 'Nairobi hotel',
-        meals: 'Dinner'
-      }
-    ],
-    includes: [
-      'All flights (Nairobi-Zanzibar)',
-      'All accommodation',
-      'Safari activities',
-      'Beach resort stay',
-      'Most meals'
-    ],
-    excludes: [
-      'International flights',
-      'Visa fees',
-      'Travel insurance'
-    ],
-    bestTimeToVisit: 'June to October, December to February',
-    difficultyLevel: 'Easy',
-    groupSize: 'Flexible'
-  },
-  {
-    id: '3',
-    title: 'Luxury Kenya Private Safari',
-    slug: 'luxury-kenya-private',
-    description: '<p>An exclusive, tailor-made journey featuring Kenya\'s most prestigious boutique lodges. Enjoy private 4x4 vehicles, personal guides, and secluded conservancies away from the main tourist tracks.</p><p>This is safari at its finest - personalized service, gourmet cuisine, and intimate wildlife encounters in some of Africa\'s most exclusive locations.</p>',
-    excerpt: 'Experience Kenya in ultimate luxury with private vehicles, exclusive lodges, and personalized service.',
-    destination: 'Kenya',
-    duration: '10 Days / 9 Nights',
-    price: '7800',
-    currency: 'USD',
-    image: 'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?w=1200',
-    gallery: [],
-    highlights: [
-      'Private game drives with dedicated guide',
-      'Exclusive luxury lodges and camps',
-      'Hot air balloon safari over the Mara',
-      'Fully personalized itinerary',
-      'Bush dinners and sundowners',
-      'Night game drives in private conservancies'
-    ],
-    itinerary: [],
-    includes: [
-      'Private safari vehicle',
-      'Luxury accommodation',
-      'All meals and premium drinks',
-      'Hot air balloon safari',
-      'Private guide'
-    ],
-    excludes: [
-      'International flights',
-      'Visa fees',
-      'Personal expenses'
-    ],
-    bestTimeToVisit: 'Year-round',
-    difficultyLevel: 'Easy - Luxury comfort',
-    groupSize: 'Private (2-6 people)'
-  }
 ];
 
 /**
+ * Helper to extract text from Portable Text blocks
+ */
+const extractText = (blocks: any): string => {
+  if (typeof blocks === "string") return blocks;
+  if (!Array.isArray(blocks)) return "";
+  return blocks
+    .filter((block: any) => block._type === "block")
+    .map((block: any) => block.children?.map((child: any) => child.text).join(" "))
+    .join("\n\n");
+};
+
+/**
  * Fetch all safari packages from Sanity
- * CURRENTLY USING MOCK DATA - Uncomment Sanity code when ready
  */
 export async function getPackages(): Promise<Package[]> {
-  // Return mock data for development
-  return MOCK_PACKAGES;
-
-  /* UNCOMMENT WHEN SANITY IS READY
   const query = `
-    *[_type == "package"] | order(title asc) {
+    *[_type == "packages"] | order(title asc) {
       _id,
       title,
-      slug,
-      description,
+      "slug": slug.current,
       excerpt,
-      destination,
+      description,
+      "destination": destination->name,
       duration,
       price,
       currency,
-      "image": mainImage.asset->url,
-      gallery[] {
-        "asset": {
-          "url": asset->url
-        },
-        alt
-      },
+      "image": image.asset->url,
+      "gallery": gallery[] { "url": asset->url },
       highlights[],
       itinerary[] {
         day,
         title,
-        description,
-        accommodation,
-        meals
+        description
       },
       includes[],
-      excludes[],
-      bestTimeToVisit,
-      difficultyLevel,
-      groupSize
+      excludes[]
     }
   `;
 
@@ -243,105 +86,156 @@ export async function getPackages(): Promise<Package[]> {
     return packages.map((pkg: any) => ({
       id: pkg._id,
       title: pkg.title,
-      slug: pkg.slug.current,
-      description: pkg.description,
-      excerpt: pkg.excerpt,
-      destination: pkg.destination,
-      duration: pkg.duration,
-      price: pkg.price,
+      slug: pkg.slug || "",
+      description: extractText(pkg.description),
+      excerpt: pkg.excerpt || "",
+      destination: pkg.destination || "Unknown",
+      duration: pkg.duration || "",
+      price: pkg.price?.toString() || "0",
       currency: pkg.currency || "USD",
       image: pkg.image || "/images/placeholder.jpg",
-      gallery: pkg.gallery || [],
+      gallery: pkg.gallery?.map((g: any) => g.url) || [],
       highlights: pkg.highlights || [],
       itinerary: pkg.itinerary || [],
       includes: pkg.includes || [],
       excludes: pkg.excludes || [],
-      bestTimeToVisit: pkg.bestTimeToVisit,
-      difficultyLevel: pkg.difficultyLevel,
-      groupSize: pkg.groupSize,
     }));
   } catch (error) {
     console.error("Error fetching packages from Sanity:", error);
-    return [];
+    return MOCK_PACKAGES;
   }
-  */
 }
 
 /**
- * Fetch a single package by slug from Sanity
- * CURRENTLY USING MOCK DATA - Uncomment Sanity code when ready
+ * Fetch all destinations from Sanity
  */
-export async function getPackageBySlug(slug: string): Promise<Package | null> {
-  // Return mock data for development
-  const pkg = MOCK_PACKAGES.find(p => p.slug === slug);
-  return pkg || null;
-
-  /* UNCOMMENT WHEN SANITY IS READY
+export async function getDestinations(): Promise<Destination[]> {
   const query = `
-    *[_type == "package" && slug.current == $slug][0] {
+    *[_type == "destinations"] | order(name asc) {
       _id,
-      title,
-      slug,
+      name,
+      "slug": slug.current,
+      country,
+      region,
       description,
-      excerpt,
-      destination,
-      duration,
-      price,
-      currency,
       "image": mainImage.asset->url,
-      gallery[] {
-        "asset": {
-          "url": asset->url
-        },
-        alt
-      },
-      highlights[],
-      itinerary[] {
-        day,
-        title,
-        description,
-        accommodation,
-        meals
-      },
-      includes[],
-      excludes[],
-      bestTimeToVisit,
-      difficultyLevel,
-      groupSize
+      featured,
+      tagline
     }
   `;
 
   try {
-    const pkg = await client.fetch(query, { slug });
-
-    if (!pkg) {
-      return null;
-    }
-
-    return {
-      id: pkg._id,
-      title: pkg.title,
-      slug: pkg.slug.current,
-      description: pkg.description,
-      excerpt: pkg.excerpt,
-      destination: pkg.destination,
-      duration: pkg.duration,
-      price: pkg.price,
-      currency: pkg.currency || "USD",
-      image: pkg.image || "/images/placeholder.jpg",
-      gallery: pkg.gallery || [],
-      highlights: pkg.highlights || [],
-      itinerary: pkg.itinerary || [],
-      includes: pkg.includes || [],
-      excludes: pkg.excludes || [],
-      bestTimeToVisit: pkg.bestTimeToVisit,
-      difficultyLevel: pkg.difficultyLevel,
-      groupSize: pkg.groupSize,
-    };
+    const destinations = await client.fetch(query);
+    return destinations.map((dest: any) => ({
+      id: dest._id,
+      name: dest.name,
+      slug: dest.slug || "",
+      description: extractText(dest.description),
+      image: dest.image || "/images/placeholder.jpg",
+      country: dest.country || "",
+      region: dest.region || "",
+      featured: dest.featured || false,
+      tagline: dest.tagline || "",
+    }));
   } catch (error) {
-    console.error(`Error fetching package "${slug}" from Sanity:`, error);
-    return null;
+    console.error("Error fetching destinations from Sanity:", error);
+    return [];
   }
-  */
 }
 
+/**
+ * Fetch safaris by destination name (e.g., "Kenya")
+ */
+export async function getSafarisByDestination(destinationName: string): Promise<Safari[]> {
+  const query = `
+    *[_type == "safaris" && destination->name == $destinationName] | order(featured desc, _createdAt desc) {
+      _id,
+      title,
+      "slug": slug.current,
+      shortDescription,
+      description,
+      "destinationName": destination->name,
+      durationDays,
+      durationNights,
+      basePrice,
+      currency,
+      highlights[],
+      itinerary[] {
+        day,
+        title,
+        description
+      },
+      "images": images[] { "url": asset->url },
+      featured,
+      status
+    }
+  `;
+
+  try {
+    const safaris = await client.fetch(query, { destinationName });
+    return safaris.map((safari: any) => ({
+      id: safari._id,
+      title: safari.title,
+      slug: safari.slug || "",
+      description: extractText(safari.description),
+      shortDescription: safari.shortDescription || "",
+      destination: safari.destinationName || "Unknown",
+      duration: safari.durationDays || 0,
+      durationNights: safari.durationNights || 0,
+      basePrice: safari.basePrice || 0,
+      currency: safari.currency || "USD",
+      highlights: safari.highlights || [],
+      itinerary: safari.itinerary || [],
+      images: safari.images?.map((img: any) => img.url) || [],
+      featured: safari.featured || false,
+      status: safari.status || "DRAFT",
+    })) as Safari[];
+  } catch (error) {
+    console.error(`Error fetching safaris for "${destinationName}":`, error);
+    return [];
+  }
+}
+
+/**
+ * Fetch all testimonials
+ */
+export async function getTestimonials(): Promise<Testimonial[]> {
+  const query = `
+    *[_type == "testimonials"] | order(tripDate desc) {
+      _id,
+      clientName,
+      clientLocation,
+      content,
+      rating,
+      featured,
+      tripDate,
+      "packageName": relatedPackage->title
+    }
+  `;
+
+  try {
+    const testimonials = await client.fetch(query);
+    return testimonials.map((t: any) => ({
+      id: t._id,
+      clientName: t.clientName || "",
+      clientLocation: t.clientLocation || "",
+      content: t.content || "",
+      rating: t.rating || 5,
+      packageName: t.packageName || "Safari Experience",
+      tripDate: t.tripDate ? new Date(t.tripDate).toLocaleDateString("en-US", { year: "numeric", month: "long" }) : "",
+      featured: t.featured || false,
+    }));
+  } catch (error) {
+    console.error("Error fetching testimonials:", error);
+    return [];
+  }
+}
+
+
+/**
+ * Fetch featured testimonials only
+ */
+export async function getFeaturedTestimonials(): Promise<Testimonial[]> {
+  const testimonials = await getTestimonials();
+  return testimonials.filter((t) => t.featured);
+}

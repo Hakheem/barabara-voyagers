@@ -13,13 +13,14 @@ import DestinationSwitcher from '@/components/general/DestinationSwitcher';
 import WhyChooseSection from '@/components/sections/WhyChooseComponent';
 import SafariPackagesSection from '@/components/sections/SafariPackages';
 import PremiumCTASection from '@/components/sections/DestinationsCTA';
+import { getSafarisByDestination } from '@/lib/sanity-queries';
 
 export const metadata = {
   title: 'Namibia Safaris - Desert Landscapes & Wildlife | Barabara Voyagers',
   description: 'Experience Namibia\'s otherworldly landscapes. Towering red dunes, desert-adapted wildlife, dramatic coastlines, and ancient cultures in Africa\'s most photogenic country.',
 };
 
-export default function NamibiaPage() {
+export default async function NamibiaPage() {
   const whyNamibiaData = [
     { 
       title: 'Surreal Landscapes', 
@@ -59,7 +60,18 @@ export default function NamibiaPage() {
     },
   ];
 
-  const safariPackagesData = [
+  // Fetch safaris from Sanity or fallback to hardcoded data
+  const sanityData = await getSafarisByDestination('Namibia');
+  const safariPackagesData = sanityData.length > 0 ? sanityData.map(safari => ({
+    id: safari.id,
+    title: safari.title,
+    slug: safari.slug,
+    duration: `${safari.duration} Days / ${safari.durationNights} Nights`,
+    basePrice: safari.basePrice,
+    description: safari.description,
+    image: safari.images[0] || 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1200',
+    highlights: safari.highlights,
+  })) : [
     {
       id: '1',
       title: 'Classic Namibia: Dunes & Dust',

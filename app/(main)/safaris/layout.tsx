@@ -7,7 +7,7 @@ import Button from '@/components/ui/Button';
 import Container from '@/components/ui/Container';
 
 const safariHeroData: Record<string, any> = {
-  classic: {
+  classic: { 
     title: "Classic Safari",
     badge: "Community & Adventure",
     badgeColor: "bg-amber-600",

@@ -13,13 +13,14 @@ import DestinationSwitcher from '@/components/general/DestinationSwitcher';
 import WhyChooseSection from '@/components/sections/WhyChooseComponent';
 import SafariPackagesSection from '@/components/sections/SafariPackages';
 import PremiumCTASection from '@/components/sections/DestinationsCTA';
+import { getSafarisByDestination } from '@/lib/sanity-queries';
 
 export const metadata = {
   title: 'Zimbabwe Safaris - Victoria Falls & Authentic Wilderness | Barabara Voyagers',
   description: 'Experience the raw beauty of Zimbabwe. From the thundering Victoria Falls to the elite walking safaris of Mana Pools and the massive elephant herds of Hwange.',
 };
 
-export default function ZimbabwePage() { 
+export default async function ZimbabwePage() { 
   const whyZimbabweData = [
     { 
       title: 'Elite Guiding Standards', 
@@ -59,7 +60,18 @@ export default function ZimbabwePage() {
     },
   ];
 
-  const safariPackagesData = [
+  // Fetch safaris from Sanity or fallback to hardcoded data
+  const sanityData = await getSafarisByDestination('Zimbabwe');
+  const safariPackagesData = sanityData.length > 0 ? sanityData.map(safari => ({
+    id: safari.id,
+    title: safari.title,
+    slug: safari.slug,
+    duration: `${safari.duration} Days / ${safari.durationNights} Nights`,
+    basePrice: safari.basePrice,
+    description: safari.description,
+    image: safari.images[0] || 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1200',
+    highlights: safari.highlights,
+  })) : [
     {
       id: '1',
       title: 'Grand Zimbabwe Explorer',

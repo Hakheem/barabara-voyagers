@@ -3,6 +3,7 @@ import { Star, Quote, ArrowRight, MapPin } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import Button from '@/components/ui/Button';
 import Image from 'next/image';
+import { getTestimonials } from '@/lib/sanity-queries';
 
 // Mock Data
 const MOCK_TESTIMONIALS = [
@@ -14,7 +15,7 @@ const MOCK_TESTIMONIALS = [
     tripDate: '2024-07-15',
     headline: 'ORCHESTRATED WITH SURGICAL PRECISION.',
     content: 'Sarah planned our Tanzania safari and it was PERFECT. She listened to what we wanted, made expert recommendations, and the timing/lodges were spot-on. When we had a flight delay, she rebooked everything seamlessly. Best travel planner we\'ve ever worked with.',
-    rating: 5, 
+    rating: 5,
   },
   {
     id: '2',
@@ -38,7 +39,10 @@ const MOCK_TESTIMONIALS = [
   },
 ];
 
-export default function TestimonialsPage() {
+export default async function TestimonialsPage() {
+  // Fetch testimonials from Sanity or fallback to mock data
+  const sanityTestimonials = await getTestimonials().catch(() => []);
+  const testimonials = sanityTestimonials.length > 0 ? sanityTestimonials : MOCK_TESTIMONIALS;
   return (
     <main className="bg-white">
       <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
@@ -68,7 +72,7 @@ export default function TestimonialsPage() {
       <section className="py-24">
         <Container>
           <div className="max-w-4xl mx-auto divide-y divide-gray-100">
-            {MOCK_TESTIMONIALS.map((t) => (
+            {testimonials.map((t) => (
               <div key={t.id} className="py-20 first:pt-0 last:pb-0 group">
                 <div className="space-y-8">
                   {/* Rating & Trip Type */}
@@ -104,7 +108,7 @@ export default function TestimonialsPage() {
                         {t.clientLocation}
                       </div>
                     </div>
-                    
+
                     <div className="mt-4 md:mt-0 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
                       Traveled {new Date(t.tripDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                     </div>

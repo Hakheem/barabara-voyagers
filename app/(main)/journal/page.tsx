@@ -4,6 +4,7 @@ import { Calendar, User, ArrowRight, Clock } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import { Card, CardContent } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
+import { getBlogs } from '@/lib/sanity-queries';
 
 // Mock Data for UI Development
 const MOCK_POSTS = [
@@ -43,8 +44,22 @@ const MOCK_POSTS = [
 ];
 
 export default async function JournalPage() {
-  const featuredPost = MOCK_POSTS[0];
-  const remainingPosts = MOCK_POSTS.slice(1);
+  // Fetch blogs from Sanity or fallback to mock data
+  const sanityBlogs = await getBlogs().catch(() => []);
+  const posts = sanityBlogs.length > 0 ? sanityBlogs.map(blog => ({
+    id: blog.id,
+    title: blog.title,
+    slug: blog.slug,
+    excerpt: blog.excerpt,
+    date: blog.publishedAt || new Date().toISOString(),
+    author: blog.author || 'Barabara Voyagers',
+    image: blog.image,
+    category: blog.categories?.[0] || 'Travel',
+    readTime: '5 min read'
+  })) : MOCK_POSTS;
+
+  const featuredPost = posts[0];
+  const remainingPosts = posts.slice(1);
 
   return (
     <main className="">
@@ -83,12 +98,12 @@ export default async function JournalPage() {
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-103"
                 />
-                 <span className="absolute top-4 left-4 bg-amber-100 text-amber-800 px-4 py-1 rounded-xl text-xs font- uppercase tracking-wider">
-                {featuredPost.category}
+                <span className="absolute top-4 left-4 bg-amber-100 text-amber-800 px-4 py-1 rounded-xl text-xs font- uppercase tracking-wider">
+                  {featuredPost.category}
                 </span>
               </div>
               <div className="space-y-4">
-               
+
                 <h2 className="text-4xl md:text-5xl  font-bold leading-tight text-gray-700 group-hover:text-amber-700 transition-colors">
                   {featuredPost.title}
                 </h2>
@@ -149,11 +164,11 @@ export default async function JournalPage() {
               </Link>
             ))}
           </div>
-          
+
           <div className="mt-20 text-center">
-             <Button variant="outline" className=" px-12 py-6 border-gray-300">
-               Load More Stories
-             </Button>
+            <Button variant="outline" className=" px-12 py-6 border-gray-300">
+              Load More Stories
+            </Button>
           </div>
         </Container>
       </section>

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { 
-  Globe, Check, Clock, Compass, Plane, Map, Shield, 
+import {
+  Globe, Check, Clock, Compass, Plane, Map, Shield,
   Users, BadgeDollarSign, Camera, Zap, Info,
   FileText, CreditCard, Download, ExternalLink,
   Sparkles, Star, Award, Briefcase
@@ -12,53 +12,65 @@ import DestinationSwitcher from '@/components/general/DestinationSwitcher';
 import WhyChooseSection from '@/components/sections/WhyChooseComponent';
 import SafariPackagesSection from '@/components/sections/SafariPackages';
 import PremiumCTASection from '@/components/sections/DestinationsCTA';
+import { getSafarisByDestination } from '@/lib/sanity-queries';
 
 export const metadata = {
   title: 'Multi-Country Safari Packages - Combine African Destinations | Barabara Voyagers',
   description: 'Combine the best of African safaris. Kenya + Tanzania, Uganda + Rwanda gorillas, Victoria Falls + Botswana.',
 };
 
-export default function MultiCountryPage() {
+export default async function MultiCountryPage() {
   const whyMultiData = [
-    { 
-      title: 'Maximum Diversity', 
-      desc: 'Combine desert dunes with lush deltas or savannahs with rainforests.', 
-      icon: Globe, 
-      img: 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=800&auto=format&fit=crop&q=80' 
+    {
+      title: 'Maximum Diversity',
+      desc: 'Combine desert dunes with lush deltas or savannahs with rainforests.',
+      icon: Globe,
+      img: 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=800&auto=format&fit=crop&q=80'
     },
-    { 
-      title: 'Seamless Logistics', 
-      desc: 'We handle all regional flights, border crossings, and multi-country visas.', 
-      icon: Plane, 
-      img: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&auto=format&fit=crop&q=80' 
+    {
+      title: 'Seamless Logistics',
+      desc: 'We handle all regional flights, border crossings, and multi-country visas.',
+      icon: Plane,
+      img: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&auto=format&fit=crop&q=80'
     },
-    { 
-      title: 'Better Value', 
-      desc: 'Maximize your international airfare by seeing multiple bucket-list spots.', 
-      icon: BadgeDollarSign, 
-      img: 'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?w=800&auto=format&fit=crop&q=80' 
+    {
+      title: 'Better Value',
+      desc: 'Maximize your international airfare by seeing multiple bucket-list spots.',
+      icon: BadgeDollarSign,
+      img: 'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?w=800&auto=format&fit=crop&q=80'
     },
-    { 
-      title: 'Expert Curation', 
-      desc: 'Itineraries designed to follow the seasonal movement of wildlife across borders.', 
-      icon: Map, 
-      img: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=800&auto=format&fit=crop&q=80' 
+    {
+      title: 'Expert Curation',
+      desc: 'Itineraries designed to follow the seasonal movement of wildlife across borders.',
+      icon: Map,
+      img: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=800&auto=format&fit=crop&q=80'
     },
-    { 
-      title: 'Elite Guiding', 
-      desc: 'Hand-picked guides who specialize in regional cross-border expeditions.', 
-      icon: Users, 
-      img: 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=800&auto=format&fit=crop&q=80' 
+    {
+      title: 'Elite Guiding',
+      desc: 'Hand-picked guides who specialize in regional cross-border expeditions.',
+      icon: Users,
+      img: 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=800&auto=format&fit=crop&q=80'
     },
-    { 
-      title: 'Priority Access', 
-      desc: 'Pre-secured permits for high-demand activities like Gorilla trekking.', 
-      icon: Zap, 
-      img: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&auto=format&fit=crop&q=80' 
+    {
+      title: 'Priority Access',
+      desc: 'Pre-secured permits for high-demand activities like Gorilla trekking.',
+      icon: Zap,
+      img: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&auto=format&fit=crop&q=80'
     },
   ];
 
-  const safariPackagesData = [
+  // Fetch safaris from Sanity or fallback to hardcoded data
+  const sanityData = await getSafarisByDestination('Multi-Country');
+  const safariPackagesData = sanityData.length > 0 ? sanityData.map(safari => ({
+    id: safari.id,
+    title: safari.title,
+    slug: safari.slug,
+    duration: `${safari.duration} Days / ${safari.durationNights} Nights`,
+    basePrice: safari.basePrice,
+    description: safari.description,
+    image: safari.images[0] || 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=1200',
+    highlights: safari.highlights,
+  })) : [
     {
       id: '1',
       title: 'Kenya & Tanzania Grand Safari',
@@ -72,7 +84,7 @@ export default function MultiCountryPage() {
       exclusivity: 'Cross-Border Specialist Guide',
       groupSize: 'Max 8 Guests'
     },
-    { 
+    {
       id: '2',
       title: 'Uganda & Rwanda Gorilla Adventure',
       slug: 'uganda-rwanda-gorillas',
@@ -172,7 +184,7 @@ export default function MultiCountryPage() {
       <section className="py-32 bg-gradient-to-b from-gray-950 to-gray-900 text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-amber-500/10 to-transparent blur-3xl" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-amber-500/10 to-transparent blur-3xl" />
-        
+
         <Container className="relative">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-4 mb-6">
@@ -243,7 +255,7 @@ export default function MultiCountryPage() {
       <section className="py-32 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-amber-500/5 to-transparent blur-3xl" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-amber-500/5 to-transparent blur-3xl" />
-        
+
         <Container className="relative">
           <div className="text-center mb-24">
             <div className="inline-flex items-center gap-4 mb-6">
@@ -253,7 +265,7 @@ export default function MultiCountryPage() {
               </span>
               <div className="w-20 h-px bg-gradient-to-l from-transparent via-amber-600/30 to-transparent" />
             </div>
-            
+
             <h2 className="text-5xl md:text-6xl title text-gray-950 mb-4 leading-tight">
               Multi-Country Essentials
             </h2>
@@ -274,7 +286,7 @@ export default function MultiCountryPage() {
                 <h3 className="text-xl title text-gray-900 mb-4 group-hover:text-amber-700 transition-colors duration-300">
                   {item.label}
                 </h3>
-                
+
                 <div className="pt-6 border-t border-gray-200/50">
                   <ul className="space-y-3">
                     {item.bullets.map((bullet, idx) => (
@@ -295,7 +307,7 @@ export default function MultiCountryPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
             {essentials.slice(3, 6).map((item, i) => (
-              <div key={i+3} className="relative p-8 transition-all duration-500 hover:scale-[1.02] group bg-white border border-gray-200/50 hover:border-amber-500/30">
+              <div key={i + 3} className="relative p-8 transition-all duration-500 hover:scale-[1.02] group bg-white border border-gray-200/50 hover:border-amber-500/30">
                 <div className="relative w-16 h-16 mb-8 flex items-center justify-center">
                   {i === 0 && <Shield className="w-8 h-8 text-amber-600" strokeWidth={1.5} />}
                   {i === 1 && <CreditCard className="w-8 h-8 text-amber-600" strokeWidth={1.5} />}
@@ -305,7 +317,7 @@ export default function MultiCountryPage() {
                 <h3 className="text-xl title text-gray-900 mb-4 group-hover:text-amber-700 transition-colors duration-300">
                   {item.label}
                 </h3>
-                
+
                 <div className="pt-6 border-t border-gray-200/50">
                   <ul className="space-y-3">
                     {item.bullets.map((bullet, idx) => (
@@ -337,11 +349,11 @@ export default function MultiCountryPage() {
                 Multi-Country Safari Guide
               </h4>
               <p className="text-gray-600 font-light mb-8 max-w-lg mx-auto">
-                All clients receive our exclusive digital travel guide with cross-border logistics, 
+                All clients receive our exclusive digital travel guide with cross-border logistics,
                 visa requirements, and regional flight planning for multi-country journeys.
               </p>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="border-gray-300 text-gray-700 hover:text-foreground hover:bg-gray-50 h-12 px-8 font-light tracking-wider group/download"
                 asChild
               >
